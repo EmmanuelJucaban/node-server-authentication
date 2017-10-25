@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const router = require('./router.js');
 const app = express();
 
+mongoose.Promise = global.Promise;
+
 mongoose.connect('mongodb://localhost/auth');
 
 const PORT = process.env.PORT || 3000;

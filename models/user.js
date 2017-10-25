@@ -14,6 +14,16 @@ const UserSchema = new Schema({
   }
 });
 
+UserSchema.methods.comparePassword = function(candidatePassword, userPassword) {
+  return bcrypt.compare(candidatePassword, userPassword).then((isMatch)  => {
+    if(isMatch) {
+      return true
+    } else {
+      return Promise.reject();
+    }
+  });
+};
+
 UserSchema.pre('save', async function(next) {
   const user = this;
 

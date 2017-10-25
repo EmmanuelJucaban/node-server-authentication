@@ -1,5 +1,15 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const config = require('../config/config');
 const _ = require('lodash');
+
+function tokenForUser(user) {
+  return jwt.sign({ id: user.id}, config.secret);
+};
+
+exports.signin = async (req, res, next) => {
+  res.send({token: tokenForUser(req.user) });
+}
 
 exports.signup = async (req, res, next) => {
   const body = _.pick(req.body, ['email', 'password']);
@@ -10,7 +20,7 @@ exports.signup = async (req, res, next) => {
     }
     const user = new User(body);
     await user.save();
-    res.json(user);
+    res.json({ token: tokenForUser(user) });
   } catch (e) {
     res.status(422).send(e);
   }
